@@ -14,13 +14,215 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          id: number
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          id?: number
+          name: string
+          sort_order?: number
+        }
+        Update: {
+          id?: number
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          annual_salary: number | null
+          created_at: string
+          expected_return: number
+          hourly_rate: number
+          id: string
+          onboarding_complete: boolean
+          projection_years: number
+          updated_at: string
+        }
+        Insert: {
+          annual_salary?: number | null
+          created_at?: string
+          expected_return?: number
+          hourly_rate?: number
+          id: string
+          onboarding_complete?: boolean
+          projection_years?: number
+          updated_at?: string
+        }
+        Update: {
+          annual_salary?: number | null
+          created_at?: string
+          expected_return?: number
+          hourly_rate?: number
+          id?: string
+          onboarding_complete?: boolean
+          projection_years?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          id: string
+          reminder_date: string | null
+          status: string
+          transaction_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          reminder_date?: string | null
+          status?: string
+          transaction_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          reminder_date?: string | null
+          status?: string
+          transaction_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions_with_impact"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          category_id: number | null
+          created_at: string
+          deleted_at: string | null
+          id: string
+          name: string
+          occurred_at: string
+          recurrence_interval: string | null
+          recurring: boolean
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category_id?: number | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          name: string
+          occurred_at?: string
+          recurrence_interval?: string | null
+          recurring?: boolean
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category_id?: number | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          name?: string
+          occurred_at?: string
+          recurrence_interval?: string | null
+          recurring?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      category_monthly_summary: {
+        Row: {
+          category_id: number | null
+          category_name: string | null
+          month: string | null
+          total_amount: number | null
+          total_hours: number | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_shock: {
+        Row: {
+          expected_return: number | null
+          long_term_projection: number | null
+          monthly_recurring_total: number | null
+          projection_years: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      transactions_with_impact: {
+        Row: {
+          amount: number | null
+          category_id: number | null
+          category_name: string | null
+          created_at: string | null
+          expected_return: number | null
+          future_value: number | null
+          hourly_rate: number | null
+          hours_traded: number | null
+          id: string | null
+          name: string | null
+          occurred_at: string | null
+          projection_years: number | null
+          recurrence_interval: string | null
+          recurring: boolean | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      derive_hourly_rate: {
+        Args: {
+          annual_salary: number
+          hours_per_week?: number
+          weeks_per_year?: number
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
